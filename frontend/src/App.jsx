@@ -1,4 +1,4 @@
-// frontend/src/App.js
+// frontend/src/App.jsx
 
 import React, { Component } from "react";
 import Modal from "./components/Modal";
@@ -39,13 +39,13 @@ class App extends Component {
           onClick={() => this.displayCompleted(true)}
           className={this.state.viewCompleted ? "active" : ""}
         >
-          complete
+          Concluídas
         </span>
         <span
           onClick={() => this.displayCompleted(false)}
           className={this.state.viewCompleted ? "" : "active"}
         >
-          Incomplete
+          Pendentes
         </span>
       </div>
     );
@@ -74,13 +74,13 @@ class App extends Component {
             className="btn btn-secondary mr-2"
           >
             {" "}
-            Edit{" "}
+            Editar{" "}
           </button>
           <button
             onClick={() => this.handleDelete(item)}
             className="btn btn-danger"
           >
-            Delete{" "}
+            Excluir{" "}
           </button>
         </span>
       </li>
@@ -122,7 +122,7 @@ class App extends Component {
             <div className="card p-3">
               <div className="">
                 <button onClick={this.createItem} className="btn btn-primary">
-                  Add task
+                  Adicionar tarefa
                 </button>
               </div>
               {this.renderTabList()}
