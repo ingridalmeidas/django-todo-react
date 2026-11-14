@@ -123,8 +123,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # we whitelist localhost:3000 because that's where frontend will be served
-CORS_ORIGIN_WHITELIST = (
-     'localhost:3000/'
- )
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]

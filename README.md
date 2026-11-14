@@ -3,22 +3,21 @@
 This is a simple Todo application built off Django (including the Django REST Framework for API CRUD operations) and React. For a complete walkthrough, see [Build a To-Do application Using Django and React](https://www.digitalocean.com/community/tutorials/build-a-to-do-application-using-django-and-react)
 
 ## Requirements
-* Python3
+* Python 3.9
 * Pipenv
+* Node.js 22.12+, 24.x, or 26+ (includes npm)
 
 ## Getting started
-1. Clone the project to your machine ```[git clone https://github.com/Jordanirabor/django-todo-react]```
-2. Navigate into the diretory ```[cd django-todo-react]```
-3. Source the virtual environment ```[pipenv shell]```
-4. Install the dependencies ```[pipenv install]```
-5. Navigate into the frontend directory ```[cd frontend]```
-5. Install the dependencies ```[npm install]```
+1. Clone the project: `git clone https://github.com/do-community/django-todo-react`
+2. Navigate to the project directory: `cd django-todo-react`
+3. Install the backend dependencies: `python3 -m pipenv install`
+4. Install the frontend dependencies: `cd frontend && npm install`
 
 ## Run the application
 You will need two terminals pointed to the frontend and backend directories to start the servers for this application.
 
-1. Run this command to start the backend server in the ```[backend]``` directory: ```[python manage.py runserver]``` (You have to run this command while you are sourced into the virtual environment)
-2. Run this command to start the frontend development server in the ```[frontend]``` directory: ```[npm install]``` (This will start the frontend on the adddress [localhost:3000](http://localhost:3000))
+1. In one terminal, run the backend from the project directory: `python3 -m pipenv run python backend/manage.py runserver`.
+2. In another terminal, run the frontend from the project directory: `cd frontend && npm start`. The frontend runs at [localhost:3000](http://localhost:3000).
 
 ## Built With
 
