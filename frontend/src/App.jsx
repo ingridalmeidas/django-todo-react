@@ -3,6 +3,7 @@
 import React, { Component } from "react";
 import Modal from "./components/Modal";
 import axios from "axios";
+import "./App.css";
 
 class App extends Component {
   constructor(props) {
@@ -33,20 +34,31 @@ class App extends Component {
     return this.setState({ viewCompleted: false });
   };
   renderTabList = () => {
+    const completedCount = this.state.todoList.filter(
+      item => item.completed
+    ).length;
+    const pendingCount = this.state.todoList.length - completedCount;
+
     return (
-      <div className="my-5 tab-list">
-        <span
+      <div className="tab-list" role="tablist" aria-label="Filtrar tarefas">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={this.state.viewCompleted}
           onClick={() => this.displayCompleted(true)}
-          className={this.state.viewCompleted ? "active" : ""}
+          className={`tab-button ${this.state.viewCompleted ? "active" : ""}`}
         >
-          Concluídas
-        </span>
-        <span
+          Concluídas <span className="tab-count">{completedCount}</span>
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={!this.state.viewCompleted}
           onClick={() => this.displayCompleted(false)}
-          className={this.state.viewCompleted ? "" : "active"}
+          className={`tab-button ${this.state.viewCompleted ? "" : "active"}`}
         >
-          Pendentes
-        </span>
+          Pendentes <span className="tab-count">{pendingCount}</span>
+        </button>
       </div>
     );
   };
@@ -55,34 +67,70 @@ class App extends Component {
     const newItems = this.state.todoList.filter(
       item => item.completed === viewCompleted
     );
+    if (newItems.length === 0) {
+      return (
+        <li className="empty-state">
+          <div className="empty-state-mark" aria-hidden="true">
+            ✓
+          </div>
+          <h3>
+            {viewCompleted
+              ? "Ainda não há tarefas concluídas"
+              : "Tudo certo por aqui"}
+          </h3>
+          <p>
+            {viewCompleted
+              ? "As tarefas que você finalizar vão aparecer aqui."
+              : "Adicione uma tarefa para começar a organizar seu dia."}
+          </p>
+        </li>
+      );
+    }
+
     return newItems.map(item => (
       <li
         key={item.id}
-        className="list-group-item d-flex justify-content-between align-items-center"
+        className={`todo-row ${item.completed ? "completed-todo" : ""}`}
       >
-        <span
-          className={`todo-title mr-2 ${
-            this.state.viewCompleted ? "completed-todo" : ""
-          }`}
-          title={item.description}
-        >
-          {item.title}
-        </span>
-        <span>
+        <div className="todo-copy">
           <button
+            type="button"
+            className="todo-toggle"
+            onClick={() => this.handleToggle(item)}
+            aria-label={
+              item.completed
+                ? `Marcar ${item.title} como pendente`
+                : `Marcar ${item.title} como concluída`
+            }
+            aria-pressed={item.completed}
+          >
+            <span className="todo-marker" aria-hidden="true" />
+          </button>
+          <div className="todo-text">
+            <div className="todo-title">{item.title}</div>
+            {item.description && (
+              <p className="todo-description">{item.description}</p>
+            )}
+          </div>
+        </div>
+        <div className="todo-actions">
+          <button
+            type="button"
             onClick={() => this.editItem(item)}
-            className="btn btn-secondary mr-2"
+            className="task-action"
+            aria-label={`Editar ${item.title}`}
           >
-            {" "}
-            Editar{" "}
+            Editar
           </button>
           <button
+            type="button"
             onClick={() => this.handleDelete(item)}
-            className="btn btn-danger"
+            className="task-action task-action-delete"
+            aria-label={`Excluir ${item.title}`}
           >
-            Excluir{" "}
+            Excluir
           </button>
-        </span>
+        </div>
       </li>
     ));
   };
@@ -101,6 +149,13 @@ class App extends Component {
       .post("http://localhost:8000/api/todos/", item)
       .then(res => this.refreshList());
   };
+  handleToggle = item => {
+    const updatedItem = { ...item, completed: !item.completed };
+    axios
+      .put(`http://localhost:8000/api/todos/${item.id}/`, updatedItem)
+      .then(() => this.refreshList())
+      .catch(err => console.log(err));
+  };
   handleDelete = item => {
     axios
       .delete(`http://localhost:8000/api/todos/${item.id}`)
@@ -114,31 +169,43 @@ class App extends Component {
     this.setState({ activeItem: item, modal: !this.state.modal });
   };
   render() {
+    const totalTasks = this.state.todoList.length;
+
     return (
-      <main className="content">
-        <h1 className="text-white text-uppercase text-center my-4">Todo app</h1>
-        <div className="row ">
-          <div className="col-md-6 col-sm-10 mx-auto p-0">
-            <div className="card p-3">
-              <div className="">
-                <button onClick={this.createItem} className="btn btn-primary">
-                  Adicionar tarefa
-                </button>
+      <main className="app-shell">
+        <div className="app-container">
+          <header className="page-header">
+            <div className="eyebrow">ORGANIZE SEU DIA</div>
+            <h1>Um passo de cada vez.</h1>
+            <p>Coloque as ideias no papel e siga no seu ritmo.</p>
+          </header>
+          <section className="todo-panel" aria-label="Lista de tarefas">
+            <div className="panel-heading">
+              <div>
+                <h2 className="panel-title">Minha lista</h2>
+                <p className="task-count">
+                  {totalTasks} {totalTasks === 1 ? "tarefa" : "tarefas"} no total
+                </p>
               </div>
-              {this.renderTabList()}
-              <ul className="list-group list-group-flush">
-                {this.renderItems()}
-              </ul>
+              <button
+                type="button"
+                onClick={this.createItem}
+                className="add-task-button"
+              >
+                + Nova tarefa
+              </button>
             </div>
-          </div>
+            {this.renderTabList()}
+            <ul className="todo-list">{this.renderItems()}</ul>
+          </section>
+          {this.state.modal ? (
+            <Modal
+              activeItem={this.state.activeItem}
+              toggle={this.toggle}
+              onSave={this.handleSubmit}
+            />
+          ) : null}
         </div>
-        {this.state.modal ? (
-          <Modal
-            activeItem={this.state.activeItem}
-            toggle={this.toggle}
-            onSave={this.handleSubmit}
-          />
-        ) : null}
       </main>
     );
   }
