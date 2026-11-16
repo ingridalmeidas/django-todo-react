@@ -1,4 +1,4 @@
-// frontend/src/components/Modal.js
+// frontend/src/components/Modal.jsx
 
 import React, { Component } from "react";
 import {
@@ -34,27 +34,27 @@ export default class CustomModal extends Component {
     const { toggle, onSave } = this.props;
     return (
       <Modal isOpen={true} toggle={toggle}>
-        <ModalHeader toggle={toggle}> Todo Item </ModalHeader>
+        <ModalHeader toggle={toggle}> Tarefa </ModalHeader>
         <ModalBody>
           <Form>
             <FormGroup>
-              <Label for="title">Title</Label>
+              <Label for="title">Título</Label>
               <Input
                 type="text"
                 name="title"
                 value={this.state.activeItem.title}
                 onChange={this.handleChange}
-                placeholder="Enter Todo Title"
+                placeholder="Digite o título da tarefa"
               />
             </FormGroup>
             <FormGroup>
-              <Label for="description">Description</Label>
+              <Label for="description">Descrição</Label>
               <Input
                 type="text"
                 name="description"
                 value={this.state.activeItem.description}
                 onChange={this.handleChange}
-                placeholder="Enter Todo description"
+                placeholder="Digite a descrição da tarefa"
               />
             </FormGroup>
             <FormGroup check>
@@ -65,14 +65,14 @@ export default class CustomModal extends Component {
                   checked={this.state.activeItem.completed}
                   onChange={this.handleChange}
                 />
-                Completed
+                Concluída
               </Label>
             </FormGroup>
           </Form>
         </ModalBody>
         <ModalFooter>
           <Button color="success" onClick={() => onSave(this.state.activeItem)}>
-            Save
+            Salvar
           </Button>
         </ModalFooter>
       </Modal>
