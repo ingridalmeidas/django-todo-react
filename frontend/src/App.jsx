@@ -65,7 +65,7 @@ class App extends Component {
   renderItems = () => {
     const { viewCompleted } = this.state;
     const newItems = this.state.todoList.filter(
-      item => item.completed !== viewCompleted
+      item => item.completed === viewCompleted
     );
     if (newItems.length === 0) {
       return (
